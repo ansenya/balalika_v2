@@ -17,22 +17,14 @@ func handleCommands(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 	switch command {
 	case "start":
 		msg.Text = "Hey! I'm bot created by @hipahopa.\n\n" +
-			"I can be either helpful, or just funny. " +
-			"This is dependent on the model used.\n" +
-			"By default, stupid model (tinyllama) is used - because it's funnier.\n\n" +
-			"But you can change the model using /change."
+			"I can say a lot of stupid things. That's why I was created.\n\n" +
+			"Don't expect me to be helpful."
 	case "clear":
 		err := db.ClearHistory(update.Message.Chat.ID)
 		if err != nil {
 			return err
 		}
 		msg.Text = "Successfully cleared history"
-	case "change":
-		model, err := db.ChangeModel(update.Message.Chat.ID)
-		if err != nil {
-			return err
-		}
-		msg.Text = "Now you are using " + model
 	case "prompt":
 		prompt := update.Message.CommandArguments()
 		if prompt == "" {
@@ -40,7 +32,7 @@ func handleCommands(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 			if err != nil {
 				return err
 			}
-			msg.Text = fmt.Sprintf("Right now your base prompt is:\n%s\n\nIf you want to change it, type /prompt <your prompt>", prompt)
+			msg.Text = fmt.Sprintf("Right now your prompt is:\n%s\n\nIf you want to change it, type /prompt <your prompt>", prompt)
 		} else {
 			err := db.ClearHistory(update.Message.Chat.ID)
 			if err != nil {
@@ -52,11 +44,7 @@ func handleCommands(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 			msg.Text = "Updated prompt (and cleared history)."
 		}
 	case "hey":
-		model, err := db.GetModel(update.Message.Chat.ID)
-		if err != nil {
-			return err
-		}
-		msg.Text = model + " here"
+		msg.Text = "I'm here"
 		msg.ReplyToMessageID = update.Message.MessageID
 	default:
 		msg.Text = "I don't know that command"
@@ -102,11 +90,7 @@ func handleTextMessage(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 		Content: fmt.Sprintf("%s: %s", update.Message.From.FirstName, update.Message.Text),
 	})
 
-	model, err := db.GetModel(update.Message.Chat.ID)
-	if err != nil {
-		return err
-	}
-	response, err := llm.RetrieveAnswer(&messages, model)
+	response, err := llm.RetrieveAnswer(&messages)
 	if err != nil {
 		return err
 	}

@@ -12,7 +12,3 @@ type ChatHistory struct {
 type Prompt struct {
 	Prompt string `bson:"prompt"`
 }
-
-type Model struct {
-	Model string `bson:"model"`
-}

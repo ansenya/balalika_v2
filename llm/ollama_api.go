@@ -10,7 +10,7 @@ import (
 
 var url = os.Getenv("OLLAMA_URL")
 
-func RetrieveAnswer(messages *[]Message, model string) (*Response, error) {
+func RetrieveAnswer(messages *[]Message) (*Response, error) {
 	request := Request{
 		Model:    "deepseek-llm:7b",
 		Messages: *messages,

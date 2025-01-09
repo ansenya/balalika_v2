@@ -14,7 +14,6 @@ import (
 var chatLocks sync.Map
 
 func main() {
-	// "mongodb://localhost:27017"
 	err := db.ConnectMongoDB(os.Getenv("MONGO_URL"))
 	if err != nil {
 		log.Fatal(err)
