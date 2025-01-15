@@ -2,7 +2,7 @@ package main
 
 import (
 	"dolphin_bot/db"
-	"dolphin_bot/llm"
+	"dolphin_bot/ollama"
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"time"
@@ -85,12 +85,12 @@ func handleTextMessage(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 	if err != nil {
 		return err
 	}
-	messages = append(messages, llm.Message{
+	messages = append(messages, ollama.Message{
 		Role:    "user",
 		Content: fmt.Sprintf("%s: %s", update.Message.From.FirstName, update.Message.Text),
 	})
 
-	response, err := llm.RetrieveAnswer(&messages)
+	response, err := ollama.RetrieveAnswer(&messages)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@ package db
 
 import (
 	"context"
-	"dolphin_bot/llm"
+	"dolphin_bot/ollama"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,7 +29,7 @@ func ConnectMongoDB(uri string) error {
 	return nil
 }
 
-func SaveMessage(chatId int64, message *llm.Message) error {
+func SaveMessage(chatId int64, message *ollama.Message) error {
 	collection := mongoClient.Database("telegram").Collection("chat_history")
 
 	filter := bson.M{"chat_id": chatId}
@@ -43,7 +43,7 @@ func SaveMessage(chatId int64, message *llm.Message) error {
 	return nil
 }
 
-func GetHistory(chatId int64) ([]llm.Message, error) {
+func GetHistory(chatId int64) ([]ollama.Message, error) {
 	collection := mongoClient.Database("telegram").Collection("chat_history")
 
 	filter := bson.M{"chat_id": chatId}
@@ -56,7 +56,7 @@ func GetHistory(chatId int64) ([]llm.Message, error) {
 			if err != nil {
 				log.Printf("Cannot get prompt: %v", err)
 			}
-			return []llm.Message{
+			return []ollama.Message{
 				{
 					Role:    "system",
 					Content: prompt,
