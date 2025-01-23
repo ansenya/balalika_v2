@@ -10,15 +10,16 @@ import (
 )
 
 var url = os.Getenv("OLLAMA_URL")
+var model = os.Getenv("OLLAMA_MODEL")
 
 func RetrieveAnswer(messages *[]Message) (*Response, error) {
 	request := Request{
-		Model:    "deepseek-llm:7b",
+		//Model:    "deepseek-llm:7b",
+		Model:    model,
 		Messages: *messages,
 		Stream:   false,
 		Options:  Options{Temperature: 1.0},
 	}
-
 	jsonRequest, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
